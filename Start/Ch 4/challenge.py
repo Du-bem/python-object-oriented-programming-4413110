@@ -5,16 +5,40 @@
 # The subclasses are required to override the magic method
 # that makes them sortable
 
-class Asset():
-    pass
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+
+@dataclass
+class Asset(ABC):
+    price: float
+
+    @abstractmethod
+    def __gt__(self, value):
+        pass
+ 
+
+@dataclass
+class Stock(Asset):
+    company: str
+    ticker: str
+
+    def __gt__(self, value):
+        if not isinstance(value, Stock):
+            raise ValueError("It's not looking gud brev!")
+        return self.price > value.price
     
 
-class Stock(Asset):
-    pass
-
-
+@dataclass
 class Bond(Asset):
-    pass
+    description: str
+    duration: int
+    yieldamt: float
+
+    def __gt__(self, value):
+        if not isinstance(value, Bond):
+            raise ValueError("It's not looking gud brev!")
+        return self.yieldamt > value.yieldamt
+    
 
 # ~~~~~~~~~ TEST CODE ~~~~~~~~~
 stocks = [
